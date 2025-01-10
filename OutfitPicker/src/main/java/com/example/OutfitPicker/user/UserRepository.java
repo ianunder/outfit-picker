@@ -23,14 +23,19 @@ public List<User> findAll(){
 
 public Optional<User> findById(Integer id){
 
-    return db.sql("select id, uname from users where id = :id").param("id",id).query(User.class).optional();
+    return db.sql("select * from users where id = :id").param("id",id).query(User.class).optional();
 }
 
-public User createUser(String uname){
+    public Optional<User> findByUname(String uname){
 
-    int affectedRows = db.sql("insert into users (uname, password) values ('uname1', 'password')").update();
+        return db.sql("select * from users where uname = :uname").param("uname",uname).query(User.class).optional();
+    }
+
+public User save(String uname, String password){
+
+    int affectedRows = db.sql("insert into users (uname, password) values (:uname, :password)").param("uname",uname).param("password", password).update();
     Assert.state(affectedRows == 1, "Failed to save user to database: " + uname);
-    return new User(1,uname);
+    return new User(1,uname, password);
 }
 
 public void deleteById(Integer id){

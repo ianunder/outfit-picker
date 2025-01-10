@@ -2,7 +2,8 @@ package com.example.OutfitPicker.user;
 
 public record User(
         Integer id,
-        String uname
+        String uname,
+        String password
 
         ) {
 }
