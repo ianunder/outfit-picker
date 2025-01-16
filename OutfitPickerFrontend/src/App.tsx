@@ -1,12 +1,21 @@
 import './App.css'
-import UserList from './components/UserList';
+import LoginForm from './components/LoginForm'
+import {Routes, Route} from 'react-router-dom'
+import Layout from './components/Layout'
+import HomePage from './components/HomePage'
 
 function App() {
   
   return (
     <>
       <div>
-        <UserList/>
+
+        <Routes>
+          <Route path='/' element={<Layout/>}>
+            <Route path='/' element={<LoginForm/>}></Route>
+            <Route path ='/home' element = {<HomePage/>}></Route>
+          </Route>
+        </Routes>
       </div>
       
     </>
