@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosConfig";
+import axiosInstance from "../api/axiosConfig";
 
 function UserList() {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -11,7 +12,7 @@ function UserList() {
 
   const getUsers = async () => {
     try {
-      const response = await api.get("/users");
+      const response = await axiosInstance.get("/users");
       console.log(response.data);
       setUsers(response.data);
     } catch (error) {

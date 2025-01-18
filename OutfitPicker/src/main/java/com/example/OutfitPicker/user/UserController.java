@@ -23,21 +23,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> findById(@PathVariable Integer id){
+    public ResponseEntity<Optional<User>> findById(@PathVariable Long id){
         return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody Map<String, String> body){
         return new ResponseEntity<>(userService.registerUser(body.get("uname"), body.get("password")), HttpStatus.CREATED);
     }
 
-    @PostMapping("/auth")
+    @PostMapping("/login")
     public ResponseEntity<User> authenticateUser(@RequestBody Map<String, String> loginCredentials){
 
-        Boolean auth = userService.authenticate(loginCredentials.get("uname"),loginCredentials.get("password"));
+        boolean auth = userService.authenticate(loginCredentials.get("uname"),loginCredentials.get("password"));
         if(auth){
-            return new ResponseEntity<>(new User(0,loginCredentials.get("uname"),loginCredentials.get("password")), HttpStatus.OK);
+            return new ResponseEntity<>(new User(loginCredentials.get("uname"),loginCredentials.get("password")), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }

@@ -1,28 +1,25 @@
 import React, { useState } from "react";
-import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../api/axiosConfig";
+import { useAuth } from "./AuthContext";
 
-const LoginForm: React.FC = () => {
-  // State for form inputs
+const LoginForm = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const login = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  // Form submission handler
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log("Username:", username);
-    console.log("Password:", password);
-    // Add your login logic here
-
     try {
-      const response = await api.post("/users/auth", {
+      const response = await axiosInstance.post("/users/login", {
         uname: username,
         password: password,
       });
       if (response.status === 200) {
-        login("/home");
+        login();
+        navigate("/home");
       }
     } catch (error) {
       console.error("Login failed.", error);
@@ -35,12 +32,10 @@ const LoginForm: React.FC = () => {
         className="border rounded shadow p-4 bg-white"
         style={{ width: "400px" }}
       >
-        {/* Placeholder content */}
-        <p className="text-center text-muted">
+        <div className="text-center text-muted">
           <form onSubmit={handleSubmit} className="p-4">
             <h2 className="text-center mb-4">Login</h2>
 
-            {/* Username field */}
             <div className="mb-3">
               <label htmlFor="username" className="form-label">
                 Username
@@ -56,7 +51,6 @@ const LoginForm: React.FC = () => {
               />
             </div>
 
-            {/* Password field */}
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 Password
@@ -72,14 +66,13 @@ const LoginForm: React.FC = () => {
               />
             </div>
 
-            {/* Submit button */}
             <div className="d-grid">
               <button type="submit" className="btn btn-primary">
                 Login
               </button>
             </div>
           </form>
-        </p>
+        </div>
       </div>
     </div>
   );
