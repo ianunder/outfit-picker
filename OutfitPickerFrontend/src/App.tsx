@@ -6,12 +6,14 @@ import HomePage from "./components/HomePage";
 import RegistrationForm from "./components/RegistrationForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./components/AuthContext";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
       <div>
         <AuthProvider>
+        <Navbar></Navbar>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<LoginForm />} />

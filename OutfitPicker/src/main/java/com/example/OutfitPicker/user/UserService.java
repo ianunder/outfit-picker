@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public User findByUname(String uname){
+        return userRepository.findByUname(uname);
+    }
+
     public User registerUser(String uname, String password){
 
         String hash = passwordEncoder.encode(password);
@@ -48,8 +52,6 @@ public class UserService {
         }
 
         return true;
-
-
 
     }
 

@@ -32,7 +32,7 @@ const RegistrationForm = () => {
     try {
       const response = await axiosInstance.post("/users/register", formData);
       if (response.status === 201) {
-        navigate("/homepage");
+        navigate("/home");
       } else {
         const errorText = await response.statusText;
         setError(errorText);

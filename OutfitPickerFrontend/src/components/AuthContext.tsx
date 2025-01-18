@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  login: (jwtToken: string) => void;
   logout: () => void;
 }
 
@@ -18,17 +18,21 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem("isAuthenticated") === "true";
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+      return true;
+    }
+    return false;
   });
 
-  const login = () => {
+  const login = (jwtToken: string) => {
     setIsAuthenticated(true);
-    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("jwtToken", jwtToken);
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("jwtToken");
   };
 
   return (

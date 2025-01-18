@@ -18,7 +18,7 @@ const LoginForm = () => {
         password: password,
       });
       if (response.status === 200) {
-        login();
+        login(response.data.token);
         navigate("/home");
       }
     } catch (error) {
