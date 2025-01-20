@@ -11,15 +11,15 @@ import java.util.Date;
 public class JwtUtil {
 
     // Generate a secure secret key
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Automatically generates a 256-bit key
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     // Generate a JWT
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 3 minutes validity
-                .signWith(key) // Use the secure key
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) //  1 hour validity
+                .signWith(key)
                 .compact();
     }
 

@@ -1,11 +1,11 @@
 import "./App.css";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "./components/authentication/LoginForm";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import HomePage from "./components/HomePage";
-import RegistrationForm from "./components/RegistrationForm";
+import RegistrationForm from "./components/authentication/RegistrationForm";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./components/AuthContext";
+import { AuthProvider } from "./components/authentication/AuthProvider";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -13,20 +13,20 @@ function App() {
     <>
       <div>
         <AuthProvider>
-        <Navbar></Navbar>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<LoginForm />} />
-            <Route path="register" element={<RegistrationForm />} />
-            <Route
-              path="home"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          <Navbar></Navbar>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<LoginForm />} />
+              <Route path="register" element={<RegistrationForm />} />
+              <Route
+                path="home"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Routes>
         </AuthProvider>
       </div>

@@ -54,10 +54,12 @@ public class UserController {
         String password = loginCredentials.get("password");
         boolean isAuthenticated = userService.authenticate(uname,password);
         if(isAuthenticated){
+            Long id = userService.findByUname(uname).getId();
             String token = jwtUtil.generateToken(uname);
             Map<String, Object> response = Map.of(
                     "token", token,
-                    "uname", uname
+                    "uname", uname,
+                    "uid", id
             );
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../api/axiosConfig";
-import { useAuth } from "./AuthContext";
+import axiosInstance from "../../api/axiosConfig";
+import { useAuth } from "./AuthProvider";
 
 const LoginForm = () => {
   const [username, setUsername] = useState<string>("");
@@ -18,7 +18,7 @@ const LoginForm = () => {
         password: password,
       });
       if (response.status === 200) {
-        login(response.data.token);
+        login(response.data.token, response.data.uname, response.data.uid);
         navigate("/home");
       }
     } catch (error) {
