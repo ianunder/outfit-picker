@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "./authentication/AuthProvider";
+import { useAuth } from "../authentication/AuthProvider";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // Redirect to the home page or login page after logout
+    navigate("/");
   };
 
   return (

@@ -1,0 +1,32 @@
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    font-size: 32px;
+    color: #333;
+  }
+  
+  button {
+    font-size: 24px;
+  }
+  
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .btn-outline-secondary {
+    padding: 15px;
+    font-size: 28px;
+  }
+  
+  .btn-danger {
+    width: 100%;
+    font-size: 18px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
