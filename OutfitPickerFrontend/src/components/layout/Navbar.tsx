@@ -11,10 +11,14 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleMyClothes = () => {
+    navigate("/myclothes"); // Navigate to the My Clothes page
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/home">
           Outfit Picker
         </Link>
         <button
@@ -31,6 +35,15 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             {isAuthenticated ? (
+              <>
+              <li className="nav-item">
+                <button
+                  className="btn btn-outline-primary me-3"
+                  onClick={handleMyClothes}
+                >
+                  My Clothes
+                </button>
+              </li>
               <li className="nav-item">
                 <button
                   className="btn btn-outline-danger"
@@ -39,6 +52,9 @@ const Navbar = () => {
                   Logout
                 </button>
               </li>
+
+              </>
+              
             ) : (
               <>
                 <li className="nav-item">

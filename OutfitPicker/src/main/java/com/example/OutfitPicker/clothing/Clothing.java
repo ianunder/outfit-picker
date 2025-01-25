@@ -29,11 +29,21 @@ public class Clothing {
     public Clothing() {
     }
 
-    public Clothing(String filePath, String name, String description, String clothingType) {
+    public Clothing(String filePath, String name, String description, String clothingType, Long uid) {
         this.filePath = filePath;
         this.name = name;
         this.description = description;
         this.clothingType = ClothingType.valueOf(clothingType);
+        this.uid = uid;
+    }
+
+    public Clothing(String filePath, String name, String description, String clothingType, Long uid, Long id) {
+        this.filePath = filePath;
+        this.name = name;
+        this.description = description;
+        this.clothingType = ClothingType.valueOf(clothingType);
+        this.uid = uid;
+        this.id = id;
     }
 }
 

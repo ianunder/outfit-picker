@@ -32,20 +32,23 @@ public ResponseEntity<String> uploadClothing(
 
 
 
-    clothingService.uploadImage(file, clothingName, description, clothingType, uname, userID);
+    Boolean upload = clothingService.uploadImage(file, clothingName, description, clothingType, uname, userID);
 
-    return new ResponseEntity<>("Clothing Uploaded", HttpStatus.OK);
+    if(upload){
+        return new ResponseEntity<>("Clothing Uploaded", HttpStatus.OK);
+    }
+    return new ResponseEntity<>("Clothing Upload failed", HttpStatus.CONFLICT);
 }
 
-@GetMapping("/{uid}")
-public ResponseEntity<List<Clothing>> getClothingByUid(@PathVariable("uid") Long uid){
+@GetMapping("/myClothes")
+public ResponseEntity<List<Clothing>> getClothingByUid(@RequestParam Long uid){
 
 
     List<Clothing> clothingList = clothingService.findByUid(uid);
     return new ResponseEntity<>(clothingList,HttpStatus.OK);
 }
 @GetMapping("/byType")
-public ResponseEntity<List<Clothing>> getClothingByTypeAndUid(@RequestParam Long uid, String clothingType){
+public ResponseEntity<List<Clothing>> getClothingByTypeAndUid(@RequestParam Long uid, @RequestParam String clothingType){
 
     List<Clothing> clothingList = clothingService.findByTypeAndUid(uid, clothingType);
 
@@ -53,7 +56,35 @@ public ResponseEntity<List<Clothing>> getClothingByTypeAndUid(@RequestParam Long
 
 }
 
+@DeleteMapping("/delete")
+    public ResponseEntity<String> deleteClothing(@RequestParam Long clothingId) {
+    Boolean delete = clothingService.deleteClothing(clothingId);
+    if (delete) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>("Error deleting file", HttpStatus.BAD_REQUEST);
+    }
+}
+
+@DeleteMapping("/deleteAll")
+public ResponseEntity<String> deleteAllClothing(@RequestParam Long uid){
+
+    Boolean delete = clothingService.deleteAllUserClothing(uid);
+    if(delete){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }else{
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+}
+
+
 
 
 
 }
+
+
+
+
+

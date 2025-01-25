@@ -7,6 +7,7 @@ import RegistrationForm from "./components/authentication/RegistrationForm";
 import ProtectedRoute from "./components/authentication/ProtectedRoute";
 import { AuthProvider } from "./components/authentication/AuthProvider";
 import Navbar from "./components/layout/Navbar";
+import ClothingList from "./components/clothing/ClothingList";
 
 function App() {
   return (
@@ -23,6 +24,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="myClothes"
+                element={
+                  <ProtectedRoute>
+                    <ClothingList />
                   </ProtectedRoute>
                 }
               />

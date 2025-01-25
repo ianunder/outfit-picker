@@ -53,25 +53,38 @@ const handleScroll = ( // handle scrolling through clothing items on button pres
 };
 
   return (
-    <div className="container py-5">
+<div className="container py-5">
       <div className="text-center mb-4">
-        <h1>Cher's Closet</h1>
+        <h1>{user && user.name}'s Closet</h1>
       </div>
 
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="d-flex flex-column align-items-center mb-4">
             <div className="d-flex align-items-center mb-3">
-              <button className="btn btn-outline-secondary mr-2" id="top-prev" onClick={() => handleScroll("top", "prev")}>
+              <button
+                className="btn btn-outline-secondary mr-2"
+                id="top-prev"
+                onClick={() => handleScroll('top', 'prev')}
+              >
                 ◀
               </button>
               <img
                 id="top-image"
-                src={tops[0]?.filePath || "http://localhost:8080/images/imagePlaceholder.jpg"}
+                src={tops[0]?.filePath || 'http://localhost:8080/images/imagePlaceholder.jpg'}
                 alt="Top"
                 className="img-fluid rounded border"
+                style={{
+                  width: '250px',
+                  height: '250px',
+                  objectFit: 'contain',
+                }}
               />
-              <button className="btn btn-outline-secondary ml-2" id="top-next" onClick={() => handleScroll("top", "next")}>
+              <button
+                className="btn btn-outline-secondary ml-2"
+                id="top-next"
+                onClick={() => handleScroll('top', 'next')}
+              >
                 ▶
               </button>
             </div>
@@ -79,20 +92,25 @@ const handleScroll = ( // handle scrolling through clothing items on button pres
               <button
                 className="btn btn-outline-secondary mr-2"
                 id="bottom-prev"
-                onClick={() => handleScroll("bottom", "prev")}
+                onClick={() => handleScroll('bottom', 'prev')}
               >
                 ◀
               </button>
               <img
                 id="bottom-image"
-                src={bottoms[0]?.filePath || "http://localhost:8080/images/imagePlaceholder.jpg"}
+                src={bottoms[0]?.filePath || 'http://localhost:8080/images/imagePlaceholder.jpg'}
                 alt="Bottom"
                 className="img-fluid rounded border"
+                style={{
+                  width: '250px',
+                  height: '250px',
+                  objectFit: 'contain',
+                }}
               />
               <button
                 className="btn btn-outline-secondary ml-2"
                 id="bottom-next"
-                onClick={() => handleScroll("bottom", "next")}
+                onClick={() => handleScroll('bottom', 'next')}
               >
                 ▶
               </button>
@@ -105,7 +123,7 @@ const handleScroll = ( // handle scrolling through clothing items on button pres
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default OutfitPickerUI
