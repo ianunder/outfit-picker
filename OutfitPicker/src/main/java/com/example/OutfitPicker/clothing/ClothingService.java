@@ -1,5 +1,7 @@
 package com.example.OutfitPicker.clothing;
 
+import com.example.OutfitPicker.Outfit.Outfit;
+import com.example.OutfitPicker.Outfit.OutfitRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,14 +17,16 @@ import java.util.Optional;
 public class ClothingService {
 
     private final ClothingRepository clothingRepository;
+    private final OutfitRepository outfitRepository;
 
     private static final String UPLOAD_DIRECTORY = "uploads/";
 
-    public ClothingService(ClothingRepository clothingRepository) {
+    public ClothingService(ClothingRepository clothingRepository, OutfitRepository outfitRepository) {
         this.clothingRepository = clothingRepository;
+        this.outfitRepository = outfitRepository;
     }
 
-    public Boolean uploadImage(MultipartFile file, String name, String description, String clothingType, String uname, Long userID) throws IOException {
+    public Clothing uploadClothing(MultipartFile file, String name, String description, String clothingType, String uname, Long userID) throws IOException {
 
         String userDirPath = UPLOAD_DIRECTORY + uname;
         File userDirectory = new File(userDirPath);
@@ -34,16 +38,15 @@ public class ClothingService {
         Path path = Paths.get(userDirPath + "/" + fileName);
 
         if(Files.exists(path)){
-            return false;
+            return null;
         }
         file.transferTo(path);
 
         String savedFilePath = "api/images/" + uname + "/" + fileName.replace("\\","/");
-        Clothing newClothing = new Clothing(savedFilePath,name,description,clothingType,userID);
+        Clothing newClothing = clothingRepository.save(new Clothing(savedFilePath,name,description,clothingType,userID));
 
-        clothingRepository.save(newClothing);
         System.out.println(newClothing);
-        return true;
+        return new Clothing("http://localhost:8080/" + savedFilePath, name, description, clothingType, userID, newClothing.getId());
     }
 
     public List<Clothing> findByUid(Long uid){
@@ -128,6 +131,14 @@ public Boolean deleteAllUserClothing(Long uid){
         });
         return true;
 }
+
+public Boolean usedInOutfit(Long clothingId){
+
+        List<Outfit> outfits = outfitRepository.findAllByClothingId(clothingId);
+    return outfits.isEmpty();
+
+}
+
 
 
 }

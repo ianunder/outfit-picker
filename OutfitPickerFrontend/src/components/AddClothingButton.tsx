@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import ClothingUpload from "./modals/ClothingUpload";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import AddClothingModal from "./modals/AddClothingModal";
 
-const AddClothingButton: React.FC = () => {
+const AddClothingButton: React.FC<{
+  handleClothingAdded: (clothingType: string) => void;
+}> = ({ handleClothingAdded }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -14,9 +16,10 @@ const AddClothingButton: React.FC = () => {
       </button>
 
       {showModal && (
-        <ClothingUpload
+        <AddClothingModal
           show={showModal}
           onClose={() => setShowModal(false)}
+          handleClothingAdded={handleClothingAdded}
         />
       )}
 

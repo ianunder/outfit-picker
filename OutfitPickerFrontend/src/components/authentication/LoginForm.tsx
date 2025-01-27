@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosConfig";
 import { useAuth } from "./AuthProvider";
@@ -7,7 +7,7 @@ const LoginForm = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login , isAuthenticated} = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,6 +25,12 @@ const LoginForm = () => {
       console.error("Login failed.", error);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">

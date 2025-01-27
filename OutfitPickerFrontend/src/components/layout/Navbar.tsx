@@ -12,7 +12,11 @@ const Navbar = () => {
   };
 
   const handleMyClothes = () => {
-    navigate("/myclothes"); // Navigate to the My Clothes page
+    navigate("/myclothes");
+  };
+
+  const handleMyOutfits = () => {
+    navigate("/myoutfits");
   };
 
   return (
@@ -36,25 +40,31 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto">
             {isAuthenticated ? (
               <>
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-primary me-3"
-                  onClick={handleMyClothes}
-                >
-                  My Clothes
-                </button>
-              </li>
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-danger"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </li>
-
+                <li className="nav-item">
+                  <button
+                    className="btn btn-outline-primary me-3"
+                    onClick={handleMyOutfits}
+                  >
+                    My Outfits
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className="btn btn-outline-primary me-3"
+                    onClick={handleMyClothes}
+                  >
+                    My Clothes
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
               </>
-              
             ) : (
               <>
                 <li className="nav-item">

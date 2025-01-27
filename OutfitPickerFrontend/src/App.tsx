@@ -2,13 +2,13 @@ import "./App.css";
 import LoginForm from "./components/authentication/LoginForm";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-import HomePage from "./components/HomePage";
 import RegistrationForm from "./components/authentication/RegistrationForm";
 import ProtectedRoute from "./components/authentication/ProtectedRoute";
 import { AuthProvider } from "./components/authentication/AuthProvider";
 import Navbar from "./components/layout/Navbar";
 import ClothingList from "./components/clothing/ClothingList";
-
+import OutfitList from "./components/outfits/OutfitList"
+import OutfitPickerUI from "./components/clothing/HomePage";
 function App() {
   return (
     <>
@@ -23,7 +23,7 @@ function App() {
                 path="home"
                 element={
                   <ProtectedRoute>
-                    <HomePage />
+                    <OutfitPickerUI />
                   </ProtectedRoute>
                 }
               />
@@ -32,6 +32,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ClothingList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="myOutfits"
+                element={
+                  <ProtectedRoute>
+                    <OutfitList />
                   </ProtectedRoute>
                 }
               />

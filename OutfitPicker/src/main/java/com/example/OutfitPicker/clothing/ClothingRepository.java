@@ -15,6 +15,7 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
         List<Clothing> findByUidAndClothingType(Long uid, ClothingType clothingType);
 
+
         void deleteAllByUid(Long uid);
 
 

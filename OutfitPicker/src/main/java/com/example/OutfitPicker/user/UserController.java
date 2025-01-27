@@ -38,13 +38,13 @@ public class UserController {
         String uname = body.get("uname");
         String password = body.get("password");
 
-        User check = userService.findByUname(body.get("uname"));
+        User newUser = userService.registerUser(uname, password);
 
-        if(check != null){
+        if(newUser == null){
             return new ResponseEntity<>("Username already taken",HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(userService.registerUser(body.get("uname"), body.get("password")), HttpStatus.CREATED);
+        return new ResponseEntity<>("User created", HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -54,7 +54,7 @@ public class UserController {
         String password = loginCredentials.get("password");
         boolean isAuthenticated = userService.authenticate(uname,password);
         if(isAuthenticated){
-            Long id = userService.findByUname(uname).getId();
+            Long id = userService.findByUname(uname).get().getId();
             String token = jwtUtil.generateToken(uname);
             Map<String, Object> response = Map.of(
                     "token", token,

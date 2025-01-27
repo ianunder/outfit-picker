@@ -22,7 +22,7 @@ public ClothingController(ClothingService clothingService){
 
 
 @PostMapping("/upload")
-public ResponseEntity<String> uploadClothing(
+public ResponseEntity<Object> uploadClothing(
         @RequestParam("uname") String uname,
         @RequestParam("clothingName") String clothingName,
         @RequestParam("file") MultipartFile file,
@@ -32,10 +32,10 @@ public ResponseEntity<String> uploadClothing(
 
 
 
-    Boolean upload = clothingService.uploadImage(file, clothingName, description, clothingType, uname, userID);
+    Clothing uploadedClothing = clothingService.uploadClothing(file, clothingName, description, clothingType, uname, userID);
 
-    if(upload){
-        return new ResponseEntity<>("Clothing Uploaded", HttpStatus.OK);
+    if(uploadedClothing != null){
+        return new ResponseEntity<>(uploadedClothing, HttpStatus.OK);
     }
     return new ResponseEntity<>("Clothing Upload failed", HttpStatus.CONFLICT);
 }
@@ -58,23 +58,32 @@ public ResponseEntity<List<Clothing>> getClothingByTypeAndUid(@RequestParam Long
 
 @DeleteMapping("/delete")
     public ResponseEntity<String> deleteClothing(@RequestParam Long clothingId) {
-    Boolean delete = clothingService.deleteClothing(clothingId);
-    if (delete) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Error deleting file", HttpStatus.BAD_REQUEST);
+
+    Boolean usedInOutfit = clothingService.usedInOutfit(clothingId);
+    if(!usedInOutfit){
+        return new ResponseEntity<>("Can not delete clothing item that is used in saved outfit", HttpStatus.BAD_REQUEST);
+    }else {
+        Boolean delete = clothingService.deleteClothing(clothingId);
+        if (delete) {
+            return new ResponseEntity<>("Clothing deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error deleting file", HttpStatus.BAD_REQUEST);
+        }
     }
 }
 
 @DeleteMapping("/deleteAll")
-public ResponseEntity<String> deleteAllClothing(@RequestParam Long uid){
+public ResponseEntity<String> deleteAllClothing(@RequestParam Long uid) {
 
     Boolean delete = clothingService.deleteAllUserClothing(uid);
-    if(delete){
+    if (delete) {
         return new ResponseEntity<>(HttpStatus.OK);
-    }else{
+    } else {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+}
+
+
 
 }
 
@@ -82,7 +91,7 @@ public ResponseEntity<String> deleteAllClothing(@RequestParam Long uid){
 
 
 
-}
+
 
 
 

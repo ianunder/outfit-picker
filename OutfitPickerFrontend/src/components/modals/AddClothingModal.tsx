@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { useAuth } from "../authentication/AuthProvider";
 
 interface AddClothingModalProps {
   show: boolean;
   onClose: () => void;
+  handleClothingAdded: (clothingItem: string ) => void;
 }
 
-const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose }) => {
+const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, handleClothingAdded }) => {
   const { user } = useAuth();
   const [clothingName, setClothingName] = useState("");
   const [clothingType, setClothingType] = useState("TOP");
@@ -33,6 +34,7 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose }) =>
     try {
       const response = await axiosInstance.post("/clothing/upload", formData);
       console.log("Upload successful", response.data);
+      handleClothingAdded(clothingType);
       onClose();
     } catch (error) {
       console.error("Error uploading clothing", error);
