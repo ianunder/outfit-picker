@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class OutfitPickerApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(OutfitPickerApplication.class, args);
 	}
 

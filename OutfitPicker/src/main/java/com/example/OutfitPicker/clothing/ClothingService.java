@@ -2,6 +2,8 @@ package com.example.OutfitPicker.clothing;
 
 import com.example.OutfitPicker.Outfit.Outfit;
 import com.example.OutfitPicker.Outfit.OutfitRepository;
+import com.example.OutfitPicker.api.BackgroundRemoverService;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,29 +21,42 @@ public class ClothingService {
 
     private final ClothingRepository clothingRepository;
     private final OutfitRepository outfitRepository;
+    private final BackgroundRemoverService backgroundRemoverService;
 
     private static final String UPLOAD_DIRECTORY = "uploads/";
 
-    public ClothingService(ClothingRepository clothingRepository, OutfitRepository outfitRepository) {
+    public ClothingService(ClothingRepository clothingRepository, OutfitRepository outfitRepository, BackgroundRemoverService backgroundRemoverService) {
         this.clothingRepository = clothingRepository;
         this.outfitRepository = outfitRepository;
+        this.backgroundRemoverService = backgroundRemoverService;
     }
 
     public Clothing uploadClothing(MultipartFile file, String name, String description, String clothingType, String uname, Long userID) throws IOException {
 
+        ByteArrayResource processedImage = backgroundRemoverService.removeImageBackground(file);  // This will block until the file is processed
+
+        if (processedImage == null) {
+           processedImage = new ByteArrayResource(file.getBytes());
+        }
+
         String userDirPath = UPLOAD_DIRECTORY + uname;
-        File userDirectory = new File(userDirPath);
-        if (!userDirectory.exists()) {
-            userDirectory.mkdirs();  // Creates the directory if it doesn't exist
+        Path userDirectory = Paths.get(userDirPath);
+        if (Files.notExists(userDirectory)) {
+            Files.createDirectories(userDirectory);  // Creates the directory if it doesn't exist
         }
 
         String fileName = file.getOriginalFilename();
         Path path = Paths.get(userDirPath + "/" + fileName);
 
-        if(Files.exists(path)){
+        if (Files.exists(path)) {
             return null;
         }
-        file.transferTo(path);
+
+        try {
+            Files.write(path, processedImage.getByteArray(), StandardOpenOption.CREATE_NEW);  // CREATE_NEW ensures the file doesn't already exist
+        } catch (IOException e) {
+            throw new IOException("Error saving the file: " + fileName, e);
+        }
 
         String savedFilePath = "api/images/" + uname + "/" + fileName.replace("\\","/");
         Clothing newClothing = clothingRepository.save(new Clothing(savedFilePath,name,description,clothingType,userID));

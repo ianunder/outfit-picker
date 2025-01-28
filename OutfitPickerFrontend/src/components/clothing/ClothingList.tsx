@@ -35,7 +35,7 @@ const ClothingList = () => {
     }
   };
 
-  const handleClothingAdded = () => {
+  const handleClothingAdded = async () => {
     fetchClothingItems();
 
     setSuccessMessage("New clothing item added!");

@@ -23,6 +23,8 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, hand
   const handleUpload = async () => {
     if (!image || !user) return;
 
+    onClose();
+
     const formData = new FormData();
     formData.append("file", image);
     formData.append("uname", user.name);
@@ -35,7 +37,6 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, hand
       const response = await axiosInstance.post("/clothing/upload", formData);
       console.log("Upload successful", response.data);
       handleClothingAdded(clothingType);
-      onClose();
     } catch (error) {
       console.error("Error uploading clothing", error);
     }
