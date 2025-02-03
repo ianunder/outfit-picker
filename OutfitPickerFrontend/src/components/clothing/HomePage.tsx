@@ -7,79 +7,62 @@ import "./HomePage.css";
 import AddClothingButton from "../AddClothingButton.tsx";
 
 const OutfitPickerUI = () => {
-  const [hats, setHats] = useState<ClothingItem[]>([]);
-  const [tops, setTops] = useState<ClothingItem[]>([]);
-  const [bottoms, setBottoms] = useState<ClothingItem[]>([]);
-  const [shoes, setShoes] = useState<ClothingItem[]>([]);
+  const [clothing, setClothing] = useState({
+    hats: [] as ClothingItem[],
+    tops: [] as ClothingItem[],
+    bottoms: [] as ClothingItem[],
+    shoes: [] as ClothingItem[],
+  });
   const { user } = useAuth();
   const [showOutfitModal, setShowOutfitModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  const [currentIndices, setCurrentIndices] = useState({
+    top: 0,
+    bottom: 0,
+  });
+
   useEffect(() => {
-    fetchClothingByType("HAT", setHats);
-    fetchClothingByType("TOP", setTops);
-    fetchClothingByType("BOTTOM", setBottoms);
-    fetchClothingByType("SHOES", setShoes);
+    fetchAllClothing();
   }, [user?.id]);
 
-  const fetchClothingByType = (
-    type: "HAT" | "TOP" | "BOTTOM" | "SHOES",
-    setState: React.Dispatch<React.SetStateAction<ClothingItem[]>>
-  ) => {
+  const fetchAllClothing = async () => {
     if (!user?.id) return;
-    axiosInstance
-      .get(`/clothing/byType`, {
+    try {
+      const response = await axiosInstance.get(`/clothing/findAllSorted`, {
         params: {
           uid: user.id,
-          clothingType: type,
         },
-      })
-      .then((response) => {
-        setState(response.data);
-      })
-      .catch((error) =>
-        console.error(`Error fetching ${type.toLowerCase()}s:`, error)
-      );
+      });
+      const { HAT = [], TOP = [], BOTTOM = [], SHOES = [] } = response.data;
+      setClothing({
+        hats: HAT,
+        tops: TOP,
+        bottoms: BOTTOM,
+        shoes: SHOES,
+      });
+    } catch (error) {
+      console.error("Error fetching clothing items", error);
+    }
   };
 
-  const handleClothingAdded = (clothingType: string) => {
-    const setterMap: Record<string, React.Dispatch<React.SetStateAction<ClothingItem[]>>> = {
-      HAT: setHats,
-      TOP: setTops,
-      BOTTOM: setBottoms,
-      SHOES: setShoes,
-    };
-    const setState = setterMap[clothingType];
-    fetchClothingByType(
-      clothingType as "HAT" | "TOP" | "BOTTOM" | "SHOES",
-      setState
-    );
-
+  const handleClothingAdded = () => {
+    fetchAllClothing();
     setSuccessMessage("New clothing item added!");
     setTimeout(() => {
       setSuccessMessage(null);
     }, 4000);
   };
 
-  const handleScroll = (
-    // handle scrolling through clothing items on button press
-    type: "top" | "bottom",
-    direction: "prev" | "next"
-  ) => {
-    const updateClothing = (prevList: ClothingItem[]) => {
-      const currentIndex = 0;
+  const handleScroll = (type: "top" | "bottom", direction: "prev" | "next") => {
+    setCurrentIndices((prevIndices) => {
       const newIndex =
         direction === "prev"
-          ? (currentIndex - 1 + prevList.length) % prevList.length
-          : (currentIndex + 1) % prevList.length;
-      return [...prevList.slice(newIndex), ...prevList.slice(0, newIndex)];
-    };
-
-    if (type === "top") {
-      setTops(updateClothing);
-    } else if (type === "bottom") {
-      setBottoms(updateClothing);
-    }
+          ? (prevIndices[type] - 1 + clothing[`${type}s`].length) %
+            clothing[`${type}s`].length
+          : (prevIndices[type] + 1) % clothing[`${type}s`].length;
+      return { ...prevIndices, [type]: newIndex };
+    });
   };
 
   const handleChooseOutfit = () => {
@@ -92,6 +75,13 @@ const OutfitPickerUI = () => {
     setTimeout(() => {
       setSuccessMessage(null);
     }, 4000);
+  };
+
+  const handleRandomize = () => {
+    setCurrentIndices({
+      top: Math.floor(Math.random() * clothing.tops.length),
+      bottom: Math.floor(Math.random() * clothing.bottoms.length),
+    });
   };
 
   return (
@@ -131,7 +121,7 @@ const OutfitPickerUI = () => {
                 <img
                   id="top-image"
                   src={
-                    tops[0]?.filePath ||
+                    clothing.tops[currentIndices.top]?.filePath ||
                     "http://localhost:8080/images/imagePlaceholder.jpg"
                   }
                   alt="Top"
@@ -161,7 +151,7 @@ const OutfitPickerUI = () => {
                 <img
                   id="bottom-image"
                   src={
-                    bottoms[0]?.filePath ||
+                    clothing.bottoms[currentIndices.bottom]?.filePath ||
                     "http://localhost:8080/images/imagePlaceholder.jpg"
                   }
                   alt="Bottom"
@@ -180,6 +170,11 @@ const OutfitPickerUI = () => {
                   ▶
                 </button>
               </div>
+              <div className="text-center mt-3">
+                <button className="btn btn-primary" onClick={handleRandomize}>
+                  🎲 Randomize
+                </button>
+              </div>
             </div>
 
             <div className="text-center">
@@ -193,10 +188,10 @@ const OutfitPickerUI = () => {
             <OutfitModal
               show={showOutfitModal}
               onClose={() => setShowOutfitModal(false)}
-              selectedHat={hats[0]}
-              selectedTop={tops[0]}
-              selectedBottom={bottoms[0]}
-              selectedShoes={shoes[0]}
+              selectedHat={clothing.hats[0]} // fix when hats and shoes added
+              selectedTop={clothing.tops[currentIndices.top]}
+              selectedBottom={clothing.bottoms[currentIndices.bottom]}
+              selectedShoes={clothing.shoes[0]}
               onSaveSuccess={handleOutfitSaveSuccess}
             ></OutfitModal>
           </div>

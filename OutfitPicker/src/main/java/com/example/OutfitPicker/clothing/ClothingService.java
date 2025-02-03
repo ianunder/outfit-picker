@@ -13,8 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ClothingService {
@@ -68,31 +67,21 @@ public class ClothingService {
     public List<Clothing> findByUid(Long uid){
 
         List<Clothing> clothingList = clothingRepository.findByUid(uid);
-        return clothingList.stream()
-                .map(clothing -> new Clothing(
-                        "http://localhost:8080/" + clothing.getFilePath(),  // Include the full URL
-                        clothing.getName(),
-                        clothing.getDescription(),
-                        clothing.getClothingType().name(),
-                        clothing.getUid(),
-                        clothing.getId()
-                ))
-                .toList();
+        clothingList.forEach(clothing ->
+                clothing.setFilePath("http://localhost:8080/" + clothing.getFilePath())
+        );
+
+        return clothingList;
     }
 
 
 public List<Clothing> findByTypeAndUid(Long uid, String type){
     List<Clothing> clothingList = clothingRepository.findByUidAndClothingType(uid, ClothingType.valueOf(type));
-    return clothingList.stream()
-            .map(clothing -> new Clothing(
-                    "http://localhost:8080/" + clothing.getFilePath(),  // Include the full URL
-                    clothing.getName(),
-                    clothing.getDescription(),
-                    clothing.getClothingType().name(),
-                    clothing.getUid(),
-                    clothing.getId()
-            ))
-            .toList();
+    clothingList.forEach(clothing ->
+            clothing.setFilePath("http://localhost:8080/" + clothing.getFilePath())
+    );
+
+    return clothingList;
 }
 
 public Boolean deleteClothing(Long clothingId){
@@ -153,6 +142,24 @@ public Boolean usedInOutfit(Long clothingId){
         List<Outfit> outfits = outfitRepository.findAllByClothingId(clothingId);
     return outfits.isEmpty();
 
+}
+
+public Map<ClothingType,List<Clothing>> findAllSorted(Long uid){
+
+        List<Clothing> allClothes = clothingRepository.findByUid(uid);
+
+        Map<ClothingType, List<Clothing>> sortedClothes = new EnumMap<>(ClothingType.class);
+        sortedClothes.put(ClothingType.HAT, new ArrayList<>());
+        sortedClothes.put(ClothingType.TOP, new ArrayList<>());
+        sortedClothes.put(ClothingType.BOTTOM, new ArrayList<>());
+        sortedClothes.put(ClothingType.SHOES, new ArrayList<>());
+
+        for(Clothing item : allClothes){
+            item.setFilePath("http://localhost:8080/" + item.getFilePath());
+            sortedClothes.get(item.getClothingType()).add(item);
+        }
+
+    return sortedClothes;
 }
 
 

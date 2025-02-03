@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import AddClothingModal from "./modals/AddClothingModal";
 
 const AddClothingButton: React.FC<{
-  handleClothingAdded: (clothingType: string) => void;
+  handleClothingAdded: () => void;
 }> = ({ handleClothingAdded }) => {
   const [showModal, setShowModal] = useState(false);
 

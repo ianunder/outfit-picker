@@ -83,6 +83,12 @@ public ResponseEntity<String> deleteAllClothing(@RequestParam Long uid) {
     }
 }
 
+@GetMapping("findAllSorted")
+public ResponseEntity<Map<ClothingType, List<Clothing>>> getSortedClothing(@RequestParam Long uid){
+
+    return new ResponseEntity<>(clothingService.findAllSorted(uid), HttpStatus.OK);
+}
+
 
 
 }

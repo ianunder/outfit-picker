@@ -5,7 +5,7 @@ import { useAuth } from "../authentication/AuthProvider";
 interface AddClothingModalProps {
   show: boolean;
   onClose: () => void;
-  handleClothingAdded: (clothingItem: string ) => void;
+  handleClothingAdded: () => void;
 }
 
 const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, handleClothingAdded }) => {
@@ -36,7 +36,7 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, hand
     try {
       const response = await axiosInstance.post("/clothing/upload", formData);
       console.log("Upload successful", response.data);
-      handleClothingAdded(clothingType);
+      handleClothingAdded();
     } catch (error) {
       console.error("Error uploading clothing", error);
     }
