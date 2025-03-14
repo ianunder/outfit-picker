@@ -28,7 +28,7 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, hand
     const formData = new FormData();
     formData.append("file", image);
     formData.append("uname", user.name);
-    formData.append("userID", user.id);
+    formData.append("userID", user.id.toString());
     formData.append("clothingName", clothingName);
     formData.append("description", description);
     formData.append("clothingType", clothingType);

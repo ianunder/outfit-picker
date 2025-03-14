@@ -6,6 +6,7 @@ import "./ClothingList.css";
 import ClothingModal from "../modals/DisplayClothingModal.tsx";
 import AddClothingButton from "../AddClothingButton.tsx";
 import { AxiosError } from "axios";
+import ClothingImage from "./ClothingImage.tsx";
 
 const ClothingList = () => {
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
@@ -156,14 +157,10 @@ const ClothingList = () => {
               onClick={() => setSelectedItem(item)}
               style={{ cursor: "pointer" }}
             >
-              <img
-                src={
-                  item.filePath ||
-                  "http://localhost:8080/images/imagePlaceholder.jpg"
-                }
-                alt={item.name}
-                className="card-img-top img-fluid rounded"
-                style={{ height: "200px", objectFit: "contain" }}
+              <ClothingImage
+                key={item.name}
+                imagePath={item.filePath}
+                altText={item.name}
               />
             </div>
           </div>

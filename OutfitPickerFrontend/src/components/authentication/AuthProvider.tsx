@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (jwtToken: string, uname : string, uid: string) => void;
+  login: (jwtToken: string, uname : string, uid: number) => void;
   logout: () => void;
   user: User | null;
 }
 
-type User = { id: string; name: string};
+type User = { id: number; name: string};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return false;
   });
 
-  const login = (jwtToken: string, uname: string, uid: string) => {
+  const login = (jwtToken: string, uname: string, uid: number) => {
     setIsAuthenticated(true);
     const user = {id: uid , name: uname}
     setUser(user);

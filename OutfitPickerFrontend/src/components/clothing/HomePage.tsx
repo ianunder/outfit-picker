@@ -5,46 +5,27 @@ import { useAuth } from "../authentication/AuthProvider.tsx";
 import OutfitModal from "../modals/OutfitModal.tsx";
 import "./HomePage.css";
 import AddClothingButton from "../AddClothingButton.tsx";
+import ToggleClothingModal from "../modals/ToggleClothingModal.tsx";
+import { CLOTHING_TYPES, useClothingState } from "../../models/clothingTypes";
+import ClothingImage from "./ClothingImage.tsx";
 
 const OutfitPickerUI = () => {
-  const [clothing, setClothing] = useState({
-    hats: [] as ClothingItem[],
-    tops: [] as ClothingItem[],
-    bottoms: [] as ClothingItem[],
-    shoes: [] as ClothingItem[],
-  });
   const { user } = useAuth();
   const [showOutfitModal, setShowOutfitModal] = useState(false);
+  const [showToggleClothingModal, setShowToggleClothingModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const [currentIndices, setCurrentIndices] = useState({
-    top: 0,
-    bottom: 0,
-  });
+  const {
+    clothingData,
+    setVisibleClothingTypes,
+    fetchAllClothing,
+    handleScroll,
+    handleRandomize,
+  } = useClothingState(user?.id as number);
 
   useEffect(() => {
     fetchAllClothing();
   }, [user?.id]);
-
-  const fetchAllClothing = async () => {
-    if (!user?.id) return;
-    try {
-      const response = await axiosInstance.get(`/clothing/findAllSorted`, {
-        params: {
-          uid: user.id,
-        },
-      });
-      const { HAT = [], TOP = [], BOTTOM = [], SHOES = [] } = response.data;
-      setClothing({
-        hats: HAT,
-        tops: TOP,
-        bottoms: BOTTOM,
-        shoes: SHOES,
-      });
-    } catch (error) {
-      console.error("Error fetching clothing items", error);
-    }
-  };
 
   const handleClothingAdded = () => {
     fetchAllClothing();
@@ -52,21 +33,6 @@ const OutfitPickerUI = () => {
     setTimeout(() => {
       setSuccessMessage(null);
     }, 4000);
-  };
-
-  const handleScroll = (type: "top" | "bottom", direction: "prev" | "next") => {
-    setCurrentIndices((prevIndices) => {
-      const newIndex =
-        direction === "prev"
-          ? (prevIndices[type] - 1 + clothing[`${type}s`].length) %
-            clothing[`${type}s`].length
-          : (prevIndices[type] + 1) % clothing[`${type}s`].length;
-      return { ...prevIndices, [type]: newIndex };
-    });
-  };
-
-  const handleChooseOutfit = () => {
-    setShowOutfitModal(true);
   };
 
   const handleOutfitSaveSuccess = () => {
@@ -77,18 +43,17 @@ const OutfitPickerUI = () => {
     }, 4000);
   };
 
-  const handleRandomize = () => {
-    setCurrentIndices({
-      top: Math.floor(Math.random() * clothing.tops.length),
-      bottom: Math.floor(Math.random() * clothing.bottoms.length),
-    });
-  };
-
   return (
     <>
       <div className="container py-5">
         <div className="text-center mb-4">
-          <h1>{user && user.name}'s Closet</h1>
+          <h1>{user && user.name}'s Closet </h1>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowToggleClothingModal(true)}
+          >
+            Toggle Clothing Types
+          </button>
         </div>
 
         {successMessage && (
@@ -108,98 +73,93 @@ const OutfitPickerUI = () => {
         )}
 
         <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="d-flex flex-column align-items-center mb-4">
-              <div className="d-flex align-items-center mb-3">
-                <button
-                  className="btn btn-outline-secondary mr-2"
-                  id="top-prev"
-                  onClick={() => handleScroll("top", "prev")}
-                >
-                  ◀
-                </button>
-                <img
-                  id="top-image"
-                  src={
-                    clothing.tops[currentIndices.top]?.filePath ||
-                    "http://localhost:8080/images/imagePlaceholder.jpg"
-                  }
-                  alt="Top"
-                  className="img-fluid rounded border"
-                  style={{
-                    width: "250px",
-                    height: "250px",
-                    objectFit: "fill",
-                  }}
-                />
-                <button
-                  className="btn btn-outline-secondary ml-2"
-                  id="top-next"
-                  onClick={() => handleScroll("top", "next")}
-                >
-                  ▶
-                </button>
+          {Object.keys(clothingData.visibleClothingTypes).map((type) =>
+            clothingData.visibleClothingTypes[
+              type as keyof typeof clothingData.visibleClothingTypes
+            ] ? (
+              <div className="col-md-6" key={type}>
+                <div className="d-flex flex-column align-items-center mb-4">
+                  <div className="d-flex align-items-center mb-3">
+                    <button
+                      className="btn btn-outline-secondary mr-2"
+                      id={`${type}-prev`}
+                      onClick={() =>
+                        handleScroll(
+                          type as keyof typeof clothingData.clothing,
+                          "prev"
+                        )
+                      }
+                    >
+                      ◀
+                    </button>
+                    <ClothingImage
+                      key={`${type}-image`}
+                      imagePath={
+                        clothingData.clothing[
+                          type as keyof typeof clothingData.clothing
+                        ][
+                          clothingData.currentIndices[
+                            type as keyof typeof clothingData.currentIndices
+                          ]
+                        ]?.filePath ||
+                        "http://localhost:8080/images/imagePlaceholder.jpg"
+                      }
+                      altText={type.charAt(0).toUpperCase() + type.slice(1)}
+                    />
+                    <button
+                      className="btn btn-outline-secondary ml-2"
+                      id={`${type}-next`}
+                      onClick={() =>
+                        handleScroll(
+                          type as keyof typeof clothingData.clothing,
+                          "next"
+                        )
+                      }
+                    >
+                      ▶
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="d-flex align-items-center">
-                <button
-                  className="btn btn-outline-secondary mr-2"
-                  id="bottom-prev"
-                  onClick={() => handleScroll("bottom", "prev")}
-                >
-                  ◀
-                </button>
-                <img
-                  id="bottom-image"
-                  src={
-                    clothing.bottoms[currentIndices.bottom]?.filePath ||
-                    "http://localhost:8080/images/imagePlaceholder.jpg"
-                  }
-                  alt="Bottom"
-                  className="img-fluid rounded border"
-                  style={{
-                    width: "250px",
-                    height: "250px",
-                    objectFit: "fill",
-                  }}
-                />
-                <button
-                  className="btn btn-outline-secondary ml-2"
-                  id="bottom-next"
-                  onClick={() => handleScroll("bottom", "next")}
-                >
-                  ▶
-                </button>
-              </div>
-              <div className="text-center mt-3">
-                <button className="btn btn-primary" onClick={handleRandomize}>
-                  🎲 Randomize
-                </button>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <button
-                className="btn btn-danger btn-lg"
-                onClick={handleChooseOutfit}
-              >
-                Choose Outfit
-              </button>
-            </div>
-            <OutfitModal
-              show={showOutfitModal}
-              onClose={() => setShowOutfitModal(false)}
-              selectedHat={clothing.hats[0]} // fix when hats and shoes added
-              selectedTop={clothing.tops[currentIndices.top]}
-              selectedBottom={clothing.bottoms[currentIndices.bottom]}
-              selectedShoes={clothing.shoes[0]}
-              onSaveSuccess={handleOutfitSaveSuccess}
-            ></OutfitModal>
-          </div>
+            ) : null
+          )}
         </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" onClick={handleRandomize}>
+            Randomize
+          </button>
+        </div>
+
+        <div className="text-center mt-3">
+          <button
+            className="btn btn-danger btn-lg"
+            onClick={() => setShowOutfitModal(true)}
+          >
+            Choose Outfit
+          </button>
+        </div>
+
+        <OutfitModal
+          show={showOutfitModal}
+          onClose={() => setShowOutfitModal(false)}
+          selectedClothing={CLOTHING_TYPES.reduce((acc, key) => {
+            acc[key] = clothingData.visibleClothingTypes[key]
+              ? clothingData.clothing[key][clothingData.currentIndices[key]]
+              : null;
+            return acc;
+          }, {} as { [key in (typeof CLOTHING_TYPES)[number]]: ClothingItem | null })}
+          onSaveSuccess={handleOutfitSaveSuccess}
+        />
+
+        <ToggleClothingModal
+          show={showToggleClothingModal}
+          onClose={() => setShowToggleClothingModal(false)}
+          setVisibleClothingTypes={setVisibleClothingTypes}
+          visibleClothingTypes={clothingData.visibleClothingTypes}
+        />
+
+        <AddClothingButton handleClothingAdded={handleClothingAdded} />
       </div>
-      <AddClothingButton
-        handleClothingAdded={handleClothingAdded}
-      ></AddClothingButton>
     </>
   );
 };

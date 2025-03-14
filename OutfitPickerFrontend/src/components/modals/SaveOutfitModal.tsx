@@ -2,25 +2,28 @@ import React, { useState } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { useAuth } from "../authentication/AuthProvider";
 import { ClothingItem } from "../../models/ClothingItem";
+import { CLOTHING_TYPES } from "../../models/clothingTypes";
 
 interface SaveOutfitModalProps {
   show: boolean;
   onClose: () => void;
-  selectedHat: ClothingItem | null;
-  selectedTop: ClothingItem | null;
-  selectedBottom: ClothingItem | null;
-  selectedShoes: ClothingItem | null;
+  selectedClothing: {[key in typeof CLOTHING_TYPES[number]]: ClothingItem | null};
   onSaveSuccess: () => void;
 }
 
 const SaveOutfitModal: React.FC<SaveOutfitModalProps> = ({ 
-  show, onClose, selectedHat, selectedTop, selectedBottom, selectedShoes, onSaveSuccess}) => {
+  show, onClose, selectedClothing, onSaveSuccess}) => {
   const { user } = useAuth();
   const [outfitName, setOutfitName] = useState("");
   const [description, setDescription] = useState("");
 
   const handleUpload = async () => {
     if (!user) return;
+
+    const selectedHat = selectedClothing["hats"]
+    const selectedTop = selectedClothing["tops"]          // fix later needs to be dynamic
+    const selectedBottom = selectedClothing["bottoms"]
+    const selectedShoes = selectedClothing["shoes"]
 
     const formData = new FormData();
     formData.append("uid", user.id.toString());
