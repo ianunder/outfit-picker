@@ -99,38 +99,18 @@ const ClothingList = () => {
 
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-4">
+      <h2 className="text-center mb-4 text-white">
         {user && user.name}'s Clothing Collection
       </h2>
 
       {errorMessage && (
-        <div
-          className="alert alert-danger"
-          role="alert"
-          style={{
-            position: "absolute",
-            top: "20%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 9999,
-          }}
-        >
+        <div className="alert alert-danger alert-centered" role="alert">
           {errorMessage}
         </div>
       )}
 
       {successMessage && (
-        <div
-          className="alert alert-success"
-          role="alert"
-          style={{
-            position: "absolute",
-            top: "20%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 9999,
-          }}
-        >
+        <div className="alert alert-success alert-centered" role="alert">
           {successMessage}
         </div>
       )}
@@ -143,7 +123,7 @@ const ClothingList = () => {
         >
           <option value="ALL">All Clothing</option>
           <option value="TOP">Tops</option>
-          <option value="BOTTOM">Bottoms</option>
+          <option value="BOTTOM">Bottoms</option>      
           <option value="SHOES">Shoes</option>
           <option value="HAT">Hats</option>
         </select>

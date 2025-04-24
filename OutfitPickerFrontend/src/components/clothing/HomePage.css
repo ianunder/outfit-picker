@@ -1,11 +1,5 @@
-/* styles.css */
 body {
     font-family: 'Arial', sans-serif;
-  }
-  
-  h1 {
-    font-size: 32px;
-    color: #333;
   }
   
   button {
@@ -23,10 +17,5 @@ body {
     font-size: 28px;
   }
   
-  .btn-danger {
-    width: 100%;
-    font-size: 18px;
-    padding: 15px;
-    border-radius: 8px;
-  }
+
   

@@ -16,7 +16,7 @@ function App() {
         <AuthProvider>
           <Navbar></Navbar>
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Layout/>}>
               <Route index element={<LoginForm />} />
               <Route path="register" element={<RegistrationForm />} />
               <Route

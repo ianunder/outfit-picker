@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/home">
           Outfit Picker
@@ -42,7 +42,7 @@ const Navbar = () => {
               <>
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-primary me-3"
+                    className="btn btn-secondary me-3"
                     onClick={handleMyOutfits}
                   >
                     My Outfits
@@ -50,7 +50,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-primary me-3"
+                    className="btn btn-secondary me-3"
                     onClick={handleMyClothes}
                   >
                     My Clothes
@@ -58,7 +58,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-danger"
+                    className="btn btn-danger"
                     onClick={handleLogout}
                   >
                     Logout

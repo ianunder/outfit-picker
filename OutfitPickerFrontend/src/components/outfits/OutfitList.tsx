@@ -61,7 +61,7 @@ const OutfitList = () => {
   return (
     <>
       <div className="container py-5">
-        <h1 className="text-center mb-4">{user?.name}'s Outfits</h1>
+        <h1 className="text-center mb-4 text-white">{user?.name}'s Outfits</h1>
 
         <div className="row">
           {outfits.map((outfit) => (
@@ -77,7 +77,6 @@ const OutfitList = () => {
               >
                 
                 {CLOTHING_TYPES.map((key) => {
-                // Map each clothing type to the corresponding property in Outfit
                 const propertyName = clothingKeyToProperty[key];
                 const imagePath = outfit[propertyName] || null;
 

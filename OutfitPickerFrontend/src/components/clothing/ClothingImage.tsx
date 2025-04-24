@@ -10,7 +10,7 @@ const ClothingImage: React.FC<{ imagePath: string | null; altText: string }> = (
         <img
           src={imagePath}
           alt={altText}
-          className="img-fluid rounded border"
+          className="img-fluid rounded"
           style={{ height: "200px", objectFit: "contain" }}
         />
       </div>

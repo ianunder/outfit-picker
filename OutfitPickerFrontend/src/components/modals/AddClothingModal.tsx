@@ -46,8 +46,7 @@ const AddClothingModal: React.FC<AddClothingModalProps> = ({ show, onClose, hand
 
   return (
     <div
-      className="modal show d-block"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      className="modal show d-block custom-modal-backdrop"
       tabIndex={-1}
     >
       <div className="modal-dialog">

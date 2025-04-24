@@ -46,7 +46,7 @@ const OutfitPickerUI = () => {
   return (
     <>
       <div className="container py-5">
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 text-white">
           <h1>{user && user.name}'s Closet </h1>
           <button
             className="btn btn-primary"
@@ -58,15 +58,8 @@ const OutfitPickerUI = () => {
 
         {successMessage && (
           <div
-            className="alert alert-success"
+            className="alert alert-success alert-centered"
             role="alert"
-            style={{
-              position: "absolute",
-              top: "20%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 9999,
-            }}
           >
             {successMessage}
           </div>
@@ -125,12 +118,9 @@ const OutfitPickerUI = () => {
           )}
         </div>
         <div className="text-center mt-3">
-          <button className="btn btn-primary" onClick={handleRandomize}>
+        <button className="btn btn-primary btn-lg me-5" onClick={handleRandomize}>
             Randomize
           </button>
-        </div>
-
-        <div className="text-center mt-3">
           <button
             className="btn btn-danger btn-lg"
             onClick={() => setShowOutfitModal(true)}
@@ -142,11 +132,11 @@ const OutfitPickerUI = () => {
         <OutfitModal
           show={showOutfitModal}
           onClose={() => setShowOutfitModal(false)}
-          selectedClothing={CLOTHING_TYPES.reduce((acc, key) => {
-            acc[key] = clothingData.visibleClothingTypes[key]
+          selectedClothing={CLOTHING_TYPES.reduce((list, key) => {
+            list[key] = clothingData.visibleClothingTypes[key]
               ? clothingData.clothing[key][clothingData.currentIndices[key]]
               : null;
-            return acc;
+            return list;
           }, {} as { [key in (typeof CLOTHING_TYPES)[number]]: ClothingItem | null })}
           onSaveSuccess={handleOutfitSaveSuccess}
         />

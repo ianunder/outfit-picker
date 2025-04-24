@@ -16,9 +16,9 @@ const ToggleClothingModal: React.FC<ToggleClothingModalProps> = ({
   setVisibleClothingTypes,
   visibleClothingTypes,
 }) => {
-  const initialCheckedItems = CLOTHING_TYPES.reduce((acc, key) => {
-    acc[key] = visibleClothingTypes[key] ?? false;
-    return acc;
+  const initialCheckedItems = CLOTHING_TYPES.reduce((list, key) => {
+    list[key] = visibleClothingTypes[key] ?? false;
+    return list;
   }, {} as Record<string, boolean>);
 
   const [checkedItems, setCheckedItems] =
@@ -38,19 +38,7 @@ const ToggleClothingModal: React.FC<ToggleClothingModalProps> = ({
 
   if (!show) return null;
   return (
-    <div
-      className="modal"
-      style={{
-        display: show ? "block" : "none",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        zIndex: 1000,
-      }}
-    >
+    <div className="modal show custom-modal-backdrop">
       <div
         className="modal-dialog"
         style={{ margin: "15% auto", maxWidth: "400px" }}
@@ -58,9 +46,7 @@ const ToggleClothingModal: React.FC<ToggleClothingModalProps> = ({
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Toggle Clothing Display</h5>
-            <button className="close" onClick={onClose}>
-              &times;
-            </button>
+            <button className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
             <form>
