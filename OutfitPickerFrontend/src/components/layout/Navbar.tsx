@@ -11,14 +11,6 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const handleMyClothes = () => {
-    navigate("/myclothes");
-  };
-
-  const handleMyOutfits = () => {
-    navigate("/myoutfits");
-  };
-
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
@@ -41,26 +33,17 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <button
-                    className="btn btn-secondary me-3"
-                    onClick={handleMyOutfits}
-                  >
+                  <Link to="/myoutfits" className="btn btn-secondary me-3">
                     My Outfits
-                  </button>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <button
-                    className="btn btn-secondary me-3"
-                    onClick={handleMyClothes}
-                  >
+                  <Link to="/myclothes" className="btn btn-secondary me-3">
                     My Clothes
-                  </button>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleLogout}
-                  >
+                  <button className="btn btn-danger" onClick={handleLogout}>
                     Logout
                   </button>
                 </li>
